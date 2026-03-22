@@ -3,151 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>中三級專屬：我的健康升級之路 🚀</title>
+    <title>中三跨學科探究：TDEE 與體態實踐日誌 🧬</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --primary-color: #4CAF50;
-            --secondary-color: #2196F3;
-            --diet-color: #FF9800;
+            --primary-color: #2E7D32; /* 科學綠 */
+            --secondary-color: #1565C0; /* 探究藍 */
+            --diet-color: #EF6C00;
+            --ai-color: #673AB7; /* AI紫 */
             --bg-color: #f4f7f6;
             --text-color: #333;
-            --chat-bg: #e1f5fe;
+            --chat-bg: #e3f2fd;
         }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; margin: 0; padding: 20px; }
         .container { max-width: 900px; margin: auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         h1, h2, h3 { text-align: center; color: var(--text-color); }
-        h1 { border-bottom: 3px solid var(--primary-color); padding-bottom: 10px; }
-        .section { margin-bottom: 30px; padding: 15px; background: #fff; border: 1px solid #ddd; border-radius: 8px; }
+        h1 { border-bottom: 3px solid var(--primary-color); padding-bottom: 10px; color: var(--primary-color);}
+        h2 { background-color: #f0f4f8; padding: 10px; border-left: 5px solid var(--secondary-color); text-align: left;}
+        .section { margin-bottom: 30px; padding: 15px; border: 1px solid #ddd; border-radius: 8px; }
         .form-group { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 15px; align-items: center; }
-        input, select { padding: 10px; border: 1px solid #ccc; border-radius: 5px; flex: 1; min-width: 120px; }
+        input, select, textarea { padding: 10px; border: 1px solid #ccc; border-radius: 5px; flex: 1; min-width: 120px; font-family: inherit;}
+        textarea { width: 100%; resize: vertical; min-height: 80px; }
         button { padding: 10px 20px; border: none; border-radius: 5px; color: white; font-weight: bold; cursor: pointer; transition: 0.3s; }
         .btn-workout { background-color: var(--primary-color); }
-        .btn-workout:hover { background-color: #45a049; }
         .btn-body { background-color: var(--secondary-color); }
         .btn-diet { background-color: var(--diet-color); }
-        .btn-diet:hover { background-color: #e68a00; }
-        .btn-score { background-color: #607D8B; width: 100%; font-size: 1.2em; margin-top: 10px;}
-        .btn-clear { background-color: #dc3545; width: 100%; margin-top: 15px; }
+        .btn-ai { background-color: var(--ai-color); width: 100%; margin-top: 10px;}
+        .btn-export { background-color: #424242; width: 100%; margin-top: 10px; font-size: 1.1em; }
+        .btn-score { background-color: #00838F; width: 100%; font-size: 1.1em; margin-top: 10px;}
         table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9em; }
         th, td { padding: 10px; text-align: center; border-bottom: 1px solid #ddd; }
         th { background-color: #f8f9fa; }
-        .score-display { text-align: center; font-size: 1.5em; font-weight: bold; margin-top: 20px; padding: 20px; border-radius: 8px; display: none; }
         .chart-container { position: relative; height: 250px; width: 100%; margin-top: 20px; }
         .goal-indicator { text-align: center; font-size: 1.1em; margin-top: 10px; color: #333; background: #fff3e0; padding: 15px; border-radius: 8px; line-height: 1.8;}
         .tdee-highlight { font-weight: bold; font-size: 1.2em; color: #D84315; }
         
         /* 聊天機械人 */
-        #chat-widget { position: fixed; bottom: 80px; right: 20px; width: 300px; height: 400px; background: white; border: 1px solid #ccc; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); overflow: hidden; display: none; flex-direction: column; z-index: 1000; }
+        #chat-widget { position: fixed; bottom: 80px; right: 20px; width: 320px; height: 450px; background: white; border: 1px solid #ccc; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); overflow: hidden; display: none; flex-direction: column; z-index: 1000; }
         #chat-header { background-color: var(--secondary-color); color: white; padding: 10px; font-weight: bold; cursor: pointer; text-align: center; }
         #chat-messages { flex: 1; padding: 10px; overflow-y: auto; background-color: var(--chat-bg); display: flex; flex-direction: column; gap: 8px; }
-        .message { max-width: 80%; padding: 8px 12px; border-radius: 8px; font-size: 0.9em; word-wrap: break-word; }
-        .bot-message { background-color: white; align-self: flex-start; }
+        .message { max-width: 85%; padding: 8px 12px; border-radius: 8px; font-size: 0.9em; word-wrap: break-word; }
+        .bot-message { background-color: white; align-self: flex-start; border-left: 3px solid var(--secondary-color);}
         .user-message { background-color: var(--primary-color); color: white; align-self: flex-end; }
         #chat-input-container { display: flex; padding: 10px; background: white; border-top: 1px solid #eee; }
         #chat-input { flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 5px; }
         #send-chat { background-color: var(--secondary-color); margin-left: 5px; padding: 8px 12px; color: white; border: none; border-radius: 5px; cursor: pointer; }
-        #chat-toggle { position: fixed; bottom: 20px; right: 20px; background-color: var(--secondary-color); color: white; width: 60px; height: 60px; border-radius: 50%; cursor: pointer; font-size: 1.8em; z-index: 1001; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: transform 0.2s; }
+        #chat-toggle { position: fixed; bottom: 20px; right: 20px; background-color: var(--secondary-color); color: white; width: 60px; height: 60px; border-radius: 50%; cursor: pointer; font-size: 1.8em; z-index: 1001; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        
+        .export-box { display: none; margin-top: 15px; padding: 15px; background: #eee; border-radius: 8px; white-space: pre-wrap; font-family: monospace; font-size: 0.9em; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>🚀 中三級：健康與體態全面追蹤</h1>
+    <h1>🧬 中三級：TDEE 與體態實證研究</h1>
 
     <div class="section">
-        <h2>🎯 1. 目標路線與 TDEE (熱量消耗) 基礎資料</h2>
+        <h2>🔬 第一階段：確立目標與科學假說</h2>
         <div class="form-group">
             <select id="g-mode" style="background-color: #e3f2fd; font-weight: bold;">
-                <option value="💪 增肌變強">💪 目標：增肌變強</option>
-                <option value="🔥 減脂瘦身">🔥 目標：減脂瘦身</option>
+                <option value="增肌">💪 探究路線：增肌 (熱量盈餘)</option>
+                <option value="減脂">🔥 探究路線：減脂 (熱量赤字)</option>
             </select>
-            <select id="g-gender">
-                <option value="M">男</option>
-                <option value="F">女</option>
-            </select>
+            <select id="g-gender"><option value="M">男</option><option value="F">女</option></select>
             <input type="number" id="g-age" placeholder="年齡" min="10">
         </div>
         <div class="form-group">
             <input type="number" id="g-height" placeholder="身高 (cm)" min="100">
-            <input type="number" id="g-current-weight" placeholder="目前體重 (kg) - 用於計算" step="0.1">
-            <input type="number" id="g-weight" placeholder="目標體重 (kg)" step="0.1">
-            <button class="btn-score" onclick="setGoals()">儲存並計算 TDEE</button>
+            <input type="number" id="g-current-weight" placeholder="目前體重 (kg)" step="0.1">
         </div>
+        <button class="btn-score" onclick="setGoals()">計算 TDEE 並鎖定探究目標</button>
         <div id="goal-summary" class="goal-indicator">請輸入資料以計算你的專屬 TDEE！</div>
+        
+        <h3 style="margin-top:20px; text-align:left;">📝 我的實驗設計</h3>
+        <textarea id="q-hypothesis" placeholder="我的科學假說 (例如：如果我連續四週...那麼...因為...)"></textarea>
+        <textarea id="q-controls" placeholder="控制變項 (例如：規定每週一早上空腹量度體重、每日睡眠8小時)"></textarea>
+        <button class="btn-score" style="background-color:#546E7A;" onclick="saveDesign()">儲存實驗設計</button>
     </div>
 
-    <div class="section" id="diet-section">
-        <h2>🍽️ 2. 飲食紀錄與目標分析</h2>
+    <div class="section">
+        <h2>📝 第二階段：收集實證數據 (飲食、運動、體態)</h2>
+        
+        <h3 style="text-align:left; border-bottom:1px solid #ccc;">🍽️ 1. 每日卡路里紀錄</h3>
         <div class="form-group">
-            <input type="date" id="d-date" required onchange="analyzeDiet()">
-            <select id="d-meal">
-                <option value="早餐">早餐</option>
-                <option value="午餐">午餐</option>
-                <option value="晚餐">晚餐</option>
-                <option value="小食/飲料">小食/飲料</option>
-            </select>
+            <input type="date" id="d-date" required>
             <input type="text" id="d-food" placeholder="食物內容 (例: 雞胸肉飯)">
             <input type="number" id="d-cals" placeholder="卡路里 (kcal)" min="0">
             <button class="btn-diet" onclick="addDiet()">新增飲食</button>
         </div>
-        
-        <div id="diet-analysis" class="goal-indicator" style="background-color: #e8f5e9;"></div>
+        <div id="diet-analysis" class="goal-indicator" style="background-color: #e8f5e9;">請輸入今日飲食以進行熱量差距分析。</div>
 
-        <table>
-            <thead><tr><th>日期</th><th>餐別</th><th>食物內容</th><th>卡路里 (kcal)</th></tr></thead>
-            <tbody id="diet-table-body"></tbody>
-        </table>
-    </div>
-
-    <div class="section" id="workout-section">
-        <h2>🏃‍♂️ 3. 運動與訓練紀錄</h2>
+        <h3 style="text-align:left; border-bottom:1px solid #ccc; margin-top:20px;">🏃‍♂️ 2. 運動介入紀錄</h3>
         <div class="form-group">
             <input type="date" id="w-date" required>
-            <select id="w-exercise">
-                <optgroup label="力量訓練 (增肌)">
-                    <option value="掌上壓">掌上壓</option>
-                    <option value="深蹲">深蹲</option>
-                    <option value="引體上升">引體上升</option>
-                    <option value="啞鈴訓練">啞鈴訓練</option>
-                    <option value="臥推">臥推</option>
-                    <option value="背闊肌下拉">背闊肌下拉</option>
-                </optgroup>
-                <optgroup label="有氧運動 (減脂)">
-                    <option value="跑步">跑步</option>
-                    <option value="跳繩">跳繩</option>
-                    <option value="踩單車">踩單車</option>
-                    <option value="游泳">游泳</option>
-                </optgroup>
-            </select>
-            <input type="number" id="w-weight" placeholder="重量(kg)/距離(km)" step="0.1" min="0">
-            <input type="number" id="w-reps" placeholder="次數/分鐘" min="1">
+            <input type="text" id="w-exercise" placeholder="運動項目 (例: 跑步/掌上壓)">
+            <input type="number" id="w-reps" placeholder="時間(分鐘)/次數" min="1">
             <button class="btn-workout" onclick="addWorkout()">新增運動</button>
         </div>
-        <table>
-            <thead><tr><th>日期</th><th>運動項目</th><th>重量/距離</th><th>次數/時間</th></tr></thead>
-            <tbody id="workout-table-body"></tbody>
-        </table>
-    </div>
 
-    <div class="section" id="body-section">
-        <h2>📏 4. 體重與圍度追蹤</h2>
+        <h3 style="text-align:left; border-bottom:1px solid #ccc; margin-top:20px;">📏 3. 應變項量度 (每週紀錄)</h3>
         <div class="form-group">
             <input type="date" id="b-date" required>
-            <input type="number" id="b-weight" placeholder="目前體重 (kg)" step="0.1">
+            <input type="number" id="b-weight" placeholder="體重 (kg)" step="0.1">
             <input type="number" id="b-waist" placeholder="腰圍 (cm)" min="1">
             <button class="btn-body" onclick="addBodyRecord()">新增體態數據</button>
         </div>
+    </div>
+
+    <div class="section">
+        <h2>📊 第三階段：數據分析與匯出</h2>
+        <p style="font-size:0.9em; color:#666;">* 觀察系統生成的趨勢圖。請點擊「匯出原始數據」，將數據抄錄至方格紙上，親手繪製雙軸折線圖以完成工作紙。</p>
         <div class="chart-container"><canvas id="weightChart"></canvas></div>
-        <div class="chart-container"><canvas id="growthChart"></canvas></div>
+        <button class="btn-export" onclick="exportData()">📥 匯出 4 星期原始數據 (供手繪圖表用)</button>
+        <div id="export-display" class="export-box"></div>
+    </div>
+
+    <div class="section">
+        <h2>🤖 第四階段：AI 協作聲明與批判反思</h2>
+        <div class="form-group">
+            <label style="font-weight:bold;">你在本次習作使用的 AI 級別：</label>
+            <select id="ai-level" style="background-color: #f3e5f5;">
+                <option value="0">級別 0：完全獨立完成 (No AI)</option>
+                <option value="1">級別 1：僅搜集資料/構思意念</option>
+                <option value="2">級別 2：行文語法改良</option>
+                <option value="3">級別 3：內容生成與深度批判修正</option>
+            </select>
+        </div>
+        <textarea id="ai-notes" placeholder="請紀錄你如何批判、拒絕或修正 AI 的建議？(例如：AI 預測我每天吃 500 卡一個月會瘦 10kg，我認為不合理，因為基礎代謝會下降...)"></textarea>
+        <button class="btn-ai" onclick="saveAI()">💾 儲存 AI 聲明與反思</button>
     </div>
 </div>
 
-<div id="chat-toggle" onclick="toggleChat()">💬</div>
+<div id="chat-toggle" onclick="toggleChat()">🤖</div>
 <div id="chat-widget">
-    <div id="chat-header" onclick="toggleChat()">🤖 健康小教練 (點擊關閉)</div>
+    <div id="chat-header" onclick="toggleChat()">🔬 科學探究小助手 (點擊關閉)</div>
     <div id="chat-messages">
-        <div class="message bot-message">嗨！有問題可以問我，例如：「TDEE」、「卡路里」、「減脂」、「增肌」或「動作」！</div>
+        <div class="message bot-message">同學你好！在探究過程中遇到困難嗎？你可以問我關於「假說」、「變項」、「TDEE」、「誤差」或「AI幻覺」的問題！</div>
     </div>
     <div id="chat-input-container">
         <input type="text" id="chat-input" placeholder="輸入問題..." onkeypress="handleKeyPress(event)">
@@ -157,217 +148,145 @@
 
 <script>
     // 資料儲存機制
-    function safeLoad(key, defaultVal) {
-        try { const data = localStorage.getItem(key); return data ? JSON.parse(data) : defaultVal; } catch(e) { return defaultVal; }
-    }
+    function safeLoad(key, defaultVal) { try { const data = localStorage.getItem(key); return data ? JSON.parse(data) : defaultVal; } catch(e) { return defaultVal; } }
     function safeSave(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch(e) {} }
 
     // 全域變數
-    let goals = safeLoad('f3_v8_goals', {});
-    let diets = safeLoad('f3_v8_diets', []);
-    let workouts = safeLoad('f3_v8_workouts', []);
-    let bodyStats = safeLoad('f3_v8_bodyStats', []);
-    let weightChart = null, growthChart = null;
+    let goals = safeLoad('f3_v9_goals', {});
+    let design = safeLoad('f3_v9_design', { hypothesis: "", controls: "" });
+    let aiData = safeLoad('f3_v9_ai', { level: "0", notes: "" });
+    let diets = safeLoad('f3_v9_diets', []);
+    let workouts = safeLoad('f3_v9_workouts', []);
+    let bodyStats = safeLoad('f3_v9_bodyStats', []);
+    let weightChart = null;
 
-    // 取得今天日期
     function getTodayString() {
-        const d = new Date();
-        return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+        const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
     }
 
     window.onload = function() {
         const today = getTodayString();
-        document.getElementById('d-date').value = today;
-        document.getElementById('w-date').value = today;
-        document.getElementById('b-date').value = today;
+        document.getElementById('d-date').value = today; document.getElementById('w-date').value = today; document.getElementById('b-date').value = today;
         
         if(goals.mode) {
-            document.getElementById('g-mode').value = goals.mode;
-            document.getElementById('g-gender').value = goals.gender || 'M';
-            document.getElementById('g-age').value = goals.age || '';
-            document.getElementById('g-height').value = goals.height || '';
+            document.getElementById('g-mode').value = goals.mode; document.getElementById('g-gender').value = goals.gender || 'M';
+            document.getElementById('g-age').value = goals.age || ''; document.getElementById('g-height').value = goals.height || '';
             document.getElementById('g-current-weight').value = goals.currentWeight || '';
-            document.getElementById('g-weight').value = goals.targetWeight || '';
         }
+        document.getElementById('q-hypothesis').value = design.hypothesis || '';
+        document.getElementById('q-controls').value = design.controls || '';
+        document.getElementById('ai-level').value = aiData.level || '0';
+        document.getElementById('ai-notes').value = aiData.notes || '';
         
-        renderTables(); 
-        updateGoalSummary(); 
-        analyzeDiet();
-        updateCharts();
+        updateGoalSummary(); analyzeDiet(); updateCharts();
     };
 
-    // 計算 TDEE
     function calculateTDEE(weight, height, age, gender) {
         if(!weight || !height || !age) return 0;
-        // Mifflin-St Jeor 公式計算 BMR
         let bmr = (10 * weight) + (6.25 * height) - (5 * age);
         bmr += (gender === 'M') ? 5 : -161;
-        // 中學生日常活動量 (乘 1.55)
         return Math.round(bmr * 1.55);
     }
 
     function setGoals() {
-        goals = {
-            mode: document.getElementById('g-mode').value,
-            gender: document.getElementById('g-gender').value,
-            age: parseFloat(document.getElementById('g-age').value),
-            height: parseFloat(document.getElementById('g-height').value),
-            currentWeight: parseFloat(document.getElementById('g-current-weight').value),
-            targetWeight: parseFloat(document.getElementById('g-weight').value)
-        };
-        
+        goals = { mode: document.getElementById('g-mode').value, gender: document.getElementById('g-gender').value, age: parseFloat(document.getElementById('g-age').value), height: parseFloat(document.getElementById('g-height').value), currentWeight: parseFloat(document.getElementById('g-current-weight').value) };
         goals.tdee = calculateTDEE(goals.currentWeight, goals.height, goals.age, goals.gender);
-        safeSave('f3_v8_goals', goals);
-        updateGoalSummary();
-        analyzeDiet();
-        alert(`設定成功！你的每日總熱量消耗 (TDEE) 約為 ${goals.tdee} kcal。`);
+        safeSave('f3_v9_goals', goals); updateGoalSummary(); analyzeDiet();
+        alert(`設定成功！你的專屬 TDEE 為 ${goals.tdee} kcal。請根據此數據完成下方「實驗設計」。`);
+    }
+
+    function saveDesign() {
+        design = { hypothesis: document.getElementById('q-hypothesis').value, controls: document.getElementById('q-controls').value };
+        safeSave('f3_v9_design', design); alert("實驗設計儲存成功！");
+    }
+
+    function saveAI() {
+        aiData = { level: document.getElementById('ai-level').value, notes: document.getElementById('ai-notes').value };
+        safeSave('f3_v9_ai', aiData); alert("AI 協作聲明儲存成功！報告時請附上此記錄。");
     }
 
     function updateGoalSummary() {
         const summary = document.getElementById('goal-summary');
         if (goals.tdee) {
-            let targetCals = goals.mode.includes("增肌") ? goals.tdee + 300 : goals.tdee - 300;
-            summary.innerHTML = `
-                路線：<b>${goals.mode}</b> <br>
-                你的 TDEE (每日總熱量消耗)：<span class="tdee-highlight">${goals.tdee} kcal</span> <br>
-                💡 根據你的目標，建議每日攝取目標約為 <span style="color:blue;">${targetCals} kcal</span>
-            `;
-        } else {
-            summary.innerText = "請輸入完整身高、體重、年齡來計算 TDEE！";
+            summary.innerHTML = `路線：<b>${goals.mode}</b> | 基準 TDEE：<span class="tdee-highlight">${goals.tdee} kcal</span><br>💡 探究指引：${goals.mode === '增肌' ? '請創造熱量盈餘 (高於 TDEE)' : '請創造熱量赤字 (低於 TDEE)'}`;
         }
     }
 
-    // 飲食紀錄
     function addDiet() {
-        const record = {
-            date: document.getElementById('d-date').value,
-            meal: document.getElementById('d-meal').value,
-            food: document.getElementById('d-food').value,
-            cals: parseInt(document.getElementById('d-cals').value)
-        };
-        if(!record.date || !record.food || isNaN(record.cals)) return alert("請填寫食物內容和卡路里！");
-        
-        diets.push(record);
-        safeSave('f3_v8_diets', diets);
-        document.getElementById('d-food').value = '';
-        document.getElementById('d-cals').value = '';
-        renderTables();
-        analyzeDiet();
+        const r = { date: document.getElementById('d-date').value, food: document.getElementById('d-food').value, cals: parseInt(document.getElementById('d-cals').value) };
+        if(!r.date || isNaN(r.cals)) return alert("請填寫日期和卡路里！");
+        diets.push(r); safeSave('f3_v9_diets', diets); document.getElementById('d-food').value = ''; document.getElementById('d-cals').value = ''; analyzeDiet();
     }
 
-    // 智能分析今日飲食
+    function addWorkout() {
+        const w = { date: document.getElementById('w-date').value, exercise: document.getElementById('w-exercise').value, reps: document.getElementById('w-reps').value };
+        if(!w.date || !w.exercise) return alert("請填寫運動項目！");
+        workouts.push(w); safeSave('f3_v9_workouts', workouts); document.getElementById('w-exercise').value = ''; document.getElementById('w-reps').value = ''; alert("運動紀錄成功！");
+    }
+
+    function addBodyRecord() {
+        const b = { date: document.getElementById('b-date').value, weight: document.getElementById('b-weight').value, waist: document.getElementById('b-waist').value };
+        if(!b.weight) return alert("請填寫體重作為應變項！");
+        bodyStats.push(b); bodyStats.sort((a,b) => new Date(a.date) - new Date(b.date));
+        safeSave('f3_v9_bodyStats', bodyStats); updateCharts(); alert("體態數據紀錄成功！");
+    }
+
     function analyzeDiet() {
         const targetDate = document.getElementById('d-date').value;
         const analysisBox = document.getElementById('diet-analysis');
-        
-        if (!goals.tdee) {
-            analysisBox.innerHTML = "請先在上方設定資料以計算 TDEE，才能為你分析飲食喔！";
-            return;
-        }
-
-        // 計算該日總攝取
+        if (!goals.tdee) return;
         let dailyTotal = diets.filter(d => d.date === targetDate).reduce((sum, d) => sum + d.cals, 0);
-        
-        let message = "";
-        let color = "#333";
-        let isMuscle = goals.mode.includes("增肌");
         let diff = dailyTotal - goals.tdee;
-
-        if (dailyTotal === 0) {
-            message = "今天還沒紀錄飲食喔！記得記錄吃下的每一口。";
-        } else {
-            if (isMuscle) {
-                // 增肌邏輯
-                if (diff >= 200 && diff <= 500) { message = "✅ 表現極佳！你處於適當的【熱量盈餘】，非常適合肌肉生長！"; color = "#2E7D32"; }
-                else if (diff > 500) { message = "⚠️ 攝取過多：雖然能增肌，但也容易囤積過多脂肪，建議稍微減少份量。"; color = "#D84315"; }
-                else { message = "❌ 熱量不足：你的攝取低於增肌需求，身體沒有足夠營養合成肌肉，請多吃點蛋白質和碳水！"; color = "#C62828"; }
-            } else {
-                // 減脂邏輯
-                if (diff <= -200 && diff >= -500) { message = "✅ 表現極佳！你創造了適當的【熱量赤字】，脂肪正在燃燒中！"; color = "#2E7D32"; }
-                else if (diff < -500) { message = "⚠️ 吃得太少了：過度節食會流失肌肉和降低代謝，請確保吃夠基礎代謝量！"; color = "#D84315"; }
-                else { message = "❌ 熱量過剩：你的攝取超過了 TDEE，這樣無法減脂喔，建議減少零食或增加有氧運動！"; color = "#C62828"; }
-            }
-        }
-
-        analysisBox.innerHTML = `
-            <strong>【${targetDate} 飲食診斷】</strong><br>
-            今日總攝取：<span style="font-size:1.2em; color:#1976d2;">${dailyTotal} kcal</span> 
-            (TDEE 基準：${goals.tdee} kcal)<br>
-            <span style="color:${color}; font-weight:bold;">${message}</span>
-        `;
+        analysisBox.innerHTML = `<strong>【${targetDate} 數據檢驗】</strong><br>今日攝取：${dailyTotal} kcal | 差距：<b>${diff > 0 ? '+'+diff : diff} kcal</b><br>*(請將此差距與你的科學假說進行比對)*`;
     }
 
-    // 新增運動和體態 (同舊版)
-    function addWorkout() {
-        const w = { date: document.getElementById('w-date').value, exercise: document.getElementById('w-exercise').value, weight: document.getElementById('w-weight').value || "-", reps: document.getElementById('w-reps').value };
-        if(!w.date || !w.reps) return alert("請填寫運動次數/時間！");
-        workouts.push(w); safeSave('f3_v8_workouts', workouts);
-        document.getElementById('w-reps').value = ''; renderTables();
-    }
-    function addBodyRecord() {
-        const b = { date: document.getElementById('b-date').value, weight: document.getElementById('b-weight').value, waist: document.getElementById('b-waist').value };
-        if(!b.weight && !b.waist) return alert("請填寫體重或腰圍！");
-        bodyStats.push(b); bodyStats.sort((a,b) => new Date(a.date) - new Date(b.date));
-        safeSave('f3_v8_bodyStats', bodyStats);
-        document.getElementById('b-weight').value = ''; renderTables(); updateCharts();
-    }
-
-    function renderTables() {
-        const dTbody = document.getElementById('diet-table-body');
-        dTbody.innerHTML = '';
-        // 倒序顯示飲食，最新在最上
-        [...diets].reverse().forEach(d => { dTbody.innerHTML += `<tr><td>${d.date}</td><td>${d.meal}</td><td>${d.food}</td><td>${d.cals}</td></tr>`; });
-
-        const wTbody = document.getElementById('workout-table-body');
-        wTbody.innerHTML = '';
-        [...workouts].reverse().forEach(w => { wTbody.innerHTML += `<tr><td>${w.date}</td><td>${w.exercise}</td><td>${w.weight}</td><td>${w.reps}</td></tr>`; });
+    function exportData() {
+        const box = document.getElementById('export-display');
+        let text = "【探究原始數據表 (供繪製雙軸圖用)】\n日期\t\t總攝取(kcal)\t熱量差距\t體重(kg)\n-------------------------------------------------\n";
+        
+        // 取得所有有紀錄的日期
+        let allDates = [...new Set([...diets.map(d=>d.date), ...bodyStats.map(b=>b.date)])].sort();
+        
+        allDates.forEach(date => {
+            let totalCals = diets.filter(d => d.date === date).reduce((sum, d) => sum + d.cals, 0);
+            let diff = goals.tdee ? (totalCals > 0 ? totalCals - goals.tdee : "-") : "未設TDEE";
+            let weightObj = bodyStats.find(b => b.date === date);
+            let weight = weightObj ? weightObj.weight : "-";
+            
+            text += `${date}\t${totalCals || "-"}\t\t${diff}\t\t${weight}\n`;
+        });
+        
+        box.innerText = text;
+        box.style.display = "block";
     }
 
     function updateCharts() {
         if(typeof Chart === 'undefined') return;
         const weightCtx = document.getElementById('weightChart').getContext('2d');
-        const growthCtx = document.getElementById('growthChart').getContext('2d');
         if (weightChart) weightChart.destroy();
-        if (growthChart) growthChart.destroy();
-
         const bLabels = bodyStats.map(b => b.date);
         weightChart = new Chart(weightCtx, {
             type: 'line',
-            data: {
-                labels: bLabels.length ? bLabels : ['無數據'],
-                datasets: [
-                    { label: '實際體重 (kg)', data: bodyStats.map(b => b.weight), borderColor: '#9C27B0', backgroundColor: 'rgba(156, 39, 176, 0.1)', fill: true, tension: 0.1, spanGaps: true },
-                    { label: '目標體重', data: bLabels.map((_, i) => i === bLabels.length-1 ? goals.targetWeight : null), borderColor: '#FF9800', borderDash: [5, 5], radius: 6 }
-                ]
-            }, options: { responsive: true, maintainAspectRatio: false, plugins: { title: { display: true, text: '⚖️ 體重變化趨勢' } } }
-        });
-        growthChart = new Chart(growthCtx, {
-            type: 'line',
-            data: {
-                labels: bLabels.length ? bLabels : ['無數據'],
-                datasets: [{ label: '腰圍(cm)', data: bodyStats.map(b => b.waist), borderColor: '#FFCE56', tension: 0.1, spanGaps: true }]
-            }, options: { responsive: true, maintainAspectRatio: false, plugins: { title: { display: true, text: '📏 腰圍變化' } } }
+            data: { labels: bLabels.length ? bLabels : ['無數據'], datasets: [{ label: '體重 (kg) - 應變項', data: bodyStats.map(b => b.weight), borderColor: '#1565C0', backgroundColor: 'rgba(21, 101, 192, 0.1)', fill: true, tension: 0.1, spanGaps: true }] },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { title: { display: true, text: '實驗結果：體重變化趨勢' } } }
         });
     }
 
-    // 聊天機械人知識庫 (加入 TDEE 與卡路里)
+    // 科學探究專用知識庫
     const botResponses = {
-        "tdee": "TDEE (每日總熱量消耗) 是你每天活著加上活動所消耗的總熱量。想減肥就吃少於TDEE，想增肌就吃多於TDEE！",
-        "卡路里": "卡路里是熱量的單位。一碗白飯大約 250 kcal，一塊雞胸肉大約 160 kcal。記得多看食物包裝上的營養標籤喔！",
-        "減肥": "減肥的核心是「熱量赤字」。請每天觀察上方「飲食診斷」，確保攝取量低於你的 TDEE 300-500 kcal。",
-        "減脂": "減脂和減肥一樣，重點是保留肌肉同時減少脂肪！建議多吃高蛋白質食物，配合有氧與力量訓練，並保持熱量赤字。",
-        "增肌": "增肌必須創造「熱量盈餘」，攝取要比 TDEE 多 300-500 kcal，並配合大重量訓練（如深蹲、臥推）撕裂肌肉！"
+        "假說": "科學假說(Hypothesis)是你對實驗結果的預測。格式通常是：如果[自變項改變]...那麼[應變項變化]...因為[科學原理]。",
+        "變項": "探究中有三種變項：自變項(你改變的，如卡路里攝取)、應變項(你量度的，如體重)、控制變項(必須保持不變的，如睡眠時間、量體重的方法)。",
+        "誤差": "任何實驗都有誤差！想想看：你有沒有漏記食物？食物標籤準確嗎？你量體重時喝了水嗎？這些都能寫在報告的「誤差分析」中。",
+        "ai": "使用 AI 幫助學習是好事，但要小心「AI 幻覺」(給出錯誤的科學建議)。記得用你學過的 TDEE 知識去質疑 AI，並在第四階段紀錄下來！",
+        "tdee": "TDEE 是每日總熱量消耗。創造熱量赤字(吃少於TDEE)能減脂，創造熱量盈餘(吃多於TDEE)配合運動能增肌。"
     };
 
     function toggleChat() { document.getElementById('chat-widget').style.display = document.getElementById('chat-widget').style.display === 'flex' ? 'none' : 'flex'; }
     function handleKeyPress(e) { if (e.key === 'Enter') sendMessage(); }
     function sendMessage() {
-        const input = document.getElementById('chat-input');
-        const text = input.value.trim().toLowerCase();
-        if (!text) return;
-        addChatMessage(text, 'user-message');
-        input.value = '';
-        let response = "你可以問我關於「TDEE」、「卡路里」、「減脂」、「增肌」等問題！";
+        const input = document.getElementById('chat-input'); const text = input.value.trim().toLowerCase();
+        if (!text) return; addChatMessage(text, 'user-message'); input.value = '';
+        let response = "你可以問我關於「假說」、「控制變項」、「誤差分析」、「TDEE」或「AI幻覺」的問題！";
         for (const key in botResponses) { if (text.includes(key)) { response = botResponses[key]; break; } }
         setTimeout(() => addChatMessage(response, 'bot-message'), 400);
     }
