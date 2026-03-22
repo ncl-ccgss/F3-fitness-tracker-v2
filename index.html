@@ -29,6 +29,7 @@
         .btn-diet { background-color: var(--diet-color); }
         .btn-export { background-color: #424242; width: 100%; margin-top: 10px; font-size: 1.1em; }
         .btn-score { background-color: #00838F; width: 100%; font-size: 1.1em; margin-top: 10px;}
+        .btn-toggle-lib { background-color: #546E7A; width: 100%; font-size: 1em; margin-bottom: 15px; display: flex; justify-content: center; align-items: center; gap: 8px; }
         table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9em; }
         th, td { padding: 10px; text-align: center; border-bottom: 1px solid #ddd; }
         th { background-color: #f8f9fa; }
@@ -42,6 +43,15 @@
         .btn-ans { background-color: #2E7D32; color: white; padding: 4px 10px; border: none; border-radius: 4px; font-size: 0.85em; cursor: pointer; }
         .btn-clear { background-color: #757575; color: white; padding: 4px 10px; border: none; border-radius: 4px; font-size: 0.85em; cursor: pointer; }
         
+        /* 運動庫設計 */
+        #exercise-library { display: none; background: #ECEFF1; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+        .exercise-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-top: 10px; }
+        .exercise-card { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .exercise-card img { width: 100%; border-radius: 5px; margin-bottom: 10px; border: 1px solid #ddd; }
+        .exercise-card h4 { margin: 0 0 5px 0; color: var(--secondary-color); font-size: 1.1em;}
+        .exercise-card span.tag { background: #E3F2FD; color: #1565C0; padding: 2px 6px; border-radius: 4px; font-size: 0.8em; margin-bottom: 8px; display: inline-block;}
+        .exercise-card p { font-size: 0.85em; color: #555; margin: 0; padding-left: 15px; text-indent: -15px;}
+
         /* 聊天機械人 */
         #chat-widget { position: fixed; bottom: 80px; right: 20px; width: 320px; height: 450px; background: white; border: 1px solid #ccc; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); overflow: hidden; display: none; flex-direction: column; z-index: 1000; }
         #chat-header { background-color: var(--secondary-color); color: white; padding: 10px; font-weight: bold; cursor: pointer; text-align: center; }
@@ -128,9 +138,50 @@
         <div id="diet-analysis" class="goal-indicator" style="background-color: #e8f5e9;">請輸入今日飲食以進行熱量差距分析。</div>
 
         <h3 style="text-align:left; border-bottom:1px solid #ccc; margin-top:20px;">🏃‍♂️ 2. 運動介入紀錄</h3>
+        
+        <button class="btn-toggle-lib" onclick="toggleLibrary()">🏋️‍♂️ 點擊查看常見運動示範與步驟 (體育科指引)</button>
+        
+        <div id="exercise-library">
+            <p style="text-align:center; font-weight:bold; margin-top:0;">保持姿勢正確能有效啟動肌肉並避免受傷，請參考以下標準動作：</p>
+            <div class="exercise-grid">
+                <div class="exercise-card">
+                    <img src="https://via.placeholder.com/300x180?text=徒手深蹲+(Squat)" alt="深蹲示範">
+                    <h4>徒手深蹲</h4>
+                    <span class="tag">💪 阻力/增肌</span>
+                    <p>1. 雙腳與肩同寬，腳尖微向外。</p>
+                    <p>2. 背部挺直，臀部向後坐下，膝蓋不內夾。</p>
+                    <p>3. 降至大腿與地面平行後，利用臀腿力量站起。</p>
+                </div>
+                <div class="exercise-card">
+                    <img src="https://via.placeholder.com/300x180?text=掌上壓+(Push-up)" alt="掌上壓示範">
+                    <h4>標準掌上壓</h4>
+                    <span class="tag">💪 阻力/增肌</span>
+                    <p>1. 雙手撐地略寬於肩，身體呈一直線。</p>
+                    <p>2. 收緊核心，屈曲手肘使身體下降，手肘微向後夾。</p>
+                    <p>3. 胸部貼近地面後，用力推起回到起始位置。</p>
+                </div>
+                <div class="exercise-card">
+                    <img src="https://via.placeholder.com/300x180?text=開合跳+(Jumping+Jacks)" alt="開合跳示範">
+                    <h4>開合跳</h4>
+                    <span class="tag">🔥 有氧/減脂</span>
+                    <p>1. 挺胸站立，雙腳併攏，雙手放兩側。</p>
+                    <p>2. 跳起時雙腳向外張開，同時雙手在頭頂擊掌。</p>
+                    <p>3. 再次跳起，回到起始姿勢，保持節奏連貫。</p>
+                </div>
+                <div class="exercise-card">
+                    <img src="https://via.placeholder.com/300x180?text=平板支撐+(Plank)" alt="平板支撐示範">
+                    <h4>平板支撐</h4>
+                    <span class="tag">🔥 核心/穩定</span>
+                    <p>1. 雙手手肘彎曲呈90度撐地，位於肩膀正下方。</p>
+                    <p>2. 雙腳向後伸直，身體從頭到腳跟呈一直線。</p>
+                    <p>3. 收緊腹部與臀部，保持呼吸順暢，切勿塌腰。</p>
+                </div>
+            </div>
+        </div>
+
         <div class="form-group">
             <input type="date" id="w-date" required>
-            <input type="text" id="w-exercise" placeholder="運動項目 (例: 跑步/掌上壓)">
+            <input type="text" id="w-exercise" placeholder="運動項目 (可參考上方)">
             <input type="number" id="w-reps" placeholder="時間(分鐘)/次數" min="1">
             <button class="btn-workout" onclick="addWorkout()">新增運動</button>
         </div>
@@ -178,7 +229,13 @@
     let bodyStats = safeLoad('f3_v9_bodyStats', []);
     let weightChart = null;
 
-    // --- 漸進式提示系統 (Progressive Hint System) ---
+    // --- 運動庫顯示切換 ---
+    function toggleLibrary() {
+        const lib = document.getElementById('exercise-library');
+        lib.style.display = lib.style.display === 'block' ? 'none' : 'block';
+    }
+
+    // --- 漸進式提示系統 (精簡版假說) ---
     const hintData = {
         ind: {
             cloze: "每日目標 _______ 攝取量、_______ 類型及 _______ 量",
@@ -193,16 +250,15 @@
             full: "體重及肌肉圍度測量時間、睡眠時間及水分攝取量"
         },
         hypo_muscle: {
-            cloze: "如果能量攝取大於能量消耗，體重 _______，因為阻力訓練會令肌肉纖維產生微小 _______，而額外的熱量與營養會在休息期間 _______ 這些纖維，發生「_______」使肌肉變得更粗壯。",
-            full: "如果能量攝取大於能量消耗，體重上升，因為阻力訓練會令肌肉纖維產生微小撕裂，而額外的熱量與營養會在休息期間修復這些纖維，發生「超量恢復」使肌肉變得更粗壯。"
+            cloze: "如果能量攝取大於消耗，體重會 _______，因為額外熱量能修復阻力訓練造成的肌肉微小 _______，產生『_______』使肌肉生長。",
+            full: "如果能量攝取大於消耗，體重會上升，因為額外熱量能修復阻力訓練造成的肌肉微小撕裂，產生『超量恢復』使肌肉生長。"
         },
         hypo_fat: {
-            cloze: "如果能量攝取少於能量消耗，體重 _______，因為當身體攝取的熱量 _______ 應付日常消耗時，便會啟動代謝機制，_______ 體內儲存的 _______ 來轉化為能量。",
-            full: "如果能量攝取少於能量消耗，體重下降，因為當身體攝取的熱量不足以應付日常消耗時，便會啟動代謝機制，分解體內儲存的脂肪來轉化為能量。"
+            cloze: "如果能量攝取少於消耗，體重會 _______，因為日常熱量 _______ 時，身體會分解儲存的 _______ 來轉化為能量。",
+            full: "如果能量攝取少於消耗，體重會下降，因為日常熱量不足時，身體會分解儲存的脂肪來轉化為能量。"
         }
     };
 
-    // 狀態追蹤: 0 = 空白, 1 = 填空題(Cloze), 2 = 完整答案(Full)
     let hintState = { ind: 0, dep: 0, ctrl: 0, hypo: 0 };
 
     function cycleHint(type) {
@@ -236,13 +292,11 @@
     }
 
     function resetHypoHint() {
-        // 如果更改了增肌/減脂路線，重置假說的按鈕狀態
         document.getElementById('q-hypothesis').value = "";
         document.getElementById('btn-hypo').innerText = "💡 顯示填空提示";
         document.getElementById('btn-hypo').className = "btn-hint";
         hintState.hypo = 0;
     }
-    // ------------------------------------------------
 
     function getTodayString() {
         const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
@@ -258,7 +312,6 @@
             document.getElementById('g-current-weight').value = goals.currentWeight || '';
         }
         
-        // 載入使用者之前輸入的資料（如果是第一次進來，就會是空白的）
         document.getElementById('v-independent').value = design.independent || '';
         document.getElementById('v-dependent').value = design.dependent || '';
         document.getElementById('v-control').value = design.controls || '';
